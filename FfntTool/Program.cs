@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,9 +10,9 @@ using FfntTool.Ffnt;
 
 namespace FfntTool
 {
-    public class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args.Length < 1 || args.Length > 2)
             {
@@ -88,7 +87,7 @@ namespace FfntTool
                 {
                     for (int i = 0; i < result.Length; i++)
                     {
-                        result[i] += layer[i];
+                        result[i] = (byte) (result[i]  | layer[i]);
                     }
                 }
                 return result;
