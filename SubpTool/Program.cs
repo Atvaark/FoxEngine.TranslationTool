@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using SubpTool.Subp;
 
 namespace SubpTool
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args.Any() || args.Length > 2)
             {
@@ -22,21 +22,28 @@ namespace SubpTool
                     UnpackSubp(path, encoding);
                     return;
                 }
+				else if(path.EndsWith(".xml"))
+				{
+					PackSubp(path);
+					return;
+				}
 
             }
             Console.WriteLine("SubpTool by Atvaark\n" +
                               "Description\n" +
-                              "  Converts Fox Engine subtitle pack (.subp) files to text (.txt)\n" +
+                              "  Converts Fox Engine subtitle pack (.subp) files to xml. \n" +
                               "Usage:\n" +
                               "  SubpTool.exe [options] filename.subp -Unpacks the subtitle pack file\n" +
+                              "  SubpTool.exe [options] filename.xml -Packs the subtitle pack file \n" +
                               "Options:\n" +
                               "  -jpn Use UTF8 encoding for japanese characters\n" +
                               "  -rus Use ISO 8859-5 encoding for cyrillic characters\n" +
                               "  -ger Use ISO-8859-1 encoding for german characters");
         }
 
-        static Encoding GetEncodingFromArgument(string encoding)
+        private static Encoding GetEncodingFromArgument(string encoding)
         {
+            // TODO: Check if the other encodings are actually ASCII.
             switch (encoding)
             {
                 case "-rus":
@@ -54,33 +61,43 @@ namespace SubpTool
         {
             string fileDirectory = Path.GetDirectoryName(path);
             string fileName = Path.GetFileNameWithoutExtension(path);
-            string outputFileName = String.Format("{0}.txt", fileName);
+            string outputFileName = fileName + ".xml";
             string outputFilePath = Path.Combine(fileDirectory, outputFileName);
 
 
-            using (FileStream input = new FileStream(path, FileMode.Open))
-            using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
-            using (StreamWriter output = new StreamWriter(outputStream, encoding))
+            using (FileStream inputStream = new FileStream(path, FileMode.Open))
+            using (XmlWriter outputWriter = XmlWriter.Create(outputFilePath, new XmlWriterSettings
             {
-                var psubFile = SubpFile.ReadSubpFile(input, encoding);
-
-                foreach (var index in psubFile.Indices)
-                {
-                    output.WriteLine("ID: {0}", index.SubId);
-                    output.WriteLine("Timings:");
-                    foreach (var timing in index.Entry.LineTimings)
-                    {
-                        output.WriteLine("{0} {1}", timing.Start, timing.End);
-                    }
-                    output.WriteLine("Subtitles:");
-                    foreach (var subtitle in index.Entry.Subtitles.Replace("\0", "").Split('$'))
-                    {
-                        output.WriteLine(subtitle);
-                    }
-                    output.WriteLine("");
-
-                }
-            }
+                NewLineHandling = NewLineHandling.Entitize,
+                Indent = true
+            }))
+			{
+				SubpFile subpFile = SubpFile.ReadSubpFile(inputStream, encoding);
+				// TODO: Change XML Encoding
+				XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
+                serializer.Serialize(outputWriter, subpFile);
+			}
         }
+
+        private static void PackSubp(string path)
+		{
+            string fileDirectory = Path.GetDirectoryName(path);
+            string fileName = Path.GetFileNameWithoutExtension(path);
+            string outputFileName = fileName + ".subp";
+            string outputFilePath = Path.Combine(fileDirectory, outputFileName);
+			
+            using (FileStream inputStream = new FileStream(path, FileMode.Open))
+            using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
+				SubpFile subpFile = serializer.Deserialize(inputStream) as SubpFile;
+				// TODO: Get the encoding from the serializer? Or just save it as an attribute in the subpfile xml.
+				Encoding encoding = Encoding.Default;
+				if(subpFile != null)
+				{
+					subpFile.Write(outputStream, encoding);
+				}					
+			}			
+		}
     }
 }

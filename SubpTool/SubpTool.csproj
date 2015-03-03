@@ -45,9 +45,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subp\SubpFile.cs" />
-    <Compile Include="Subp\SubpFileEntry.cs" />
-    <Compile Include="Subp\SubpFileIndex.cs" />
-    <Compile Include="Subp\SubpFileLineTiming.cs" />
+    <Compile Include="Subp\SubpEntry.cs" />
+    <Compile Include="Subp\SubpIndex.cs" />
+    <Compile Include="Subp\SubpLine.cs" />
+    <Compile Include="Subp\SubpTiming.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
