@@ -8,14 +8,13 @@ namespace LangTool.Lang
     [XmlRoot("LangFile")]
     public class LangFile
     {
-        [XmlArray("Entries")]
-        public List<LangEntry> Entries { get; set; }
-
         public LangFile()
         {
             Entries = new List<LangEntry>();
         }
 
+        [XmlArray("Entries")]
+        public List<LangEntry> Entries { get; set; }
 
         public static LangFile ReadLangFile(Stream inputStream)
         {
@@ -57,8 +56,6 @@ namespace LangTool.Lang
 
                 inputStream.Position = nextEntryPosition;
             }
-
-
         }
 
         public void Write(Stream outputStream)
@@ -69,12 +66,12 @@ namespace LangTool.Lang
 
             outputStream.Position += 32;
             long entriesPosition = outputStream.Position;
-            outputStream.Position += 8 * Entries.Count;
+            outputStream.Position += 8*Entries.Count;
             int keysPosition = (int) outputStream.Position;
 
             foreach (var entry in Entries)
             {
-                entry.KeyOffset = (int)(outputStream.Position - keysPosition);
+                entry.KeyOffset = (int) (outputStream.Position - keysPosition);
                 writer.WriteNullTerminatedString(entry.Key);
             }
 
@@ -83,8 +80,8 @@ namespace LangTool.Lang
 
             foreach (var entry in Entries)
             {
-                entry.ValueOffset = (int)(outputStream.Position - valuesPosition);
-                writer.Write((short)1);
+                entry.ValueOffset = (int) (outputStream.Position - valuesPosition);
+                writer.Write((short) 1);
                 writer.WriteNullTerminatedString(entry.Value);
             }
 
@@ -97,8 +94,8 @@ namespace LangTool.Lang
             writer.Write(17740);
             writer.Write(Entries.Count);
             writer.Write(32);
-            writer.Write((int)(keysPosition - headerPosition));
-            writer.Write((int)(valuesPosition - headerPosition));
+            writer.Write((int) (keysPosition - headerPosition));
+            writer.Write((int) (valuesPosition - headerPosition));
             writer.Write(0);
 
             foreach (var entry in Entries)

@@ -6,7 +6,6 @@ namespace SubpTool.Subp
     public class SubpIndex
     {
         public const int Size = 8;
-
         public uint SubtitleId { get; set; }
         public uint Offset { get; set; }
 
@@ -23,12 +22,12 @@ namespace SubpTool.Subp
             SubtitleId = reader.ReadUInt32();
             Offset = reader.ReadUInt32();
         }
-		
-		public void Write(Stream outputStream)
-		{
-			BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
-			writer.Write(SubtitleId);
-			writer.Write(Offset);
-		}
+
+        public void Write(Stream outputStream)
+        {
+            BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
+            writer.Write(SubtitleId);
+            writer.Write(Offset);
+        }
     }
 }

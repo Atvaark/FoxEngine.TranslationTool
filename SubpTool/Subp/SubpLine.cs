@@ -2,23 +2,23 @@
 
 namespace SubpTool.Subp
 {
-	[XmlType("Line")]
-	public class SubpLine
+    [XmlType("Line")]
+    public class SubpLine
     {
-	    public SubpLine()
-	    {
-	        
-	    }
+        public SubpLine()
+        {
+        }
 
-	    public SubpLine(string text, SubpTiming timing)
-	    {
-	        Text = text;
-	        Timing = timing;
-	    }
+        public SubpLine(string text, SubpTiming timing)
+        {
+            Text = text;
+            Timing = timing;
+        }
 
-	    [XmlAttribute("Text")]
-		public string Text {get;set;}
-		[XmlElement("Timing")]
-		public SubpTiming Timing {get;set;}
+        [XmlAttribute("Text")]
+        public string Text { get; set; }
+
+        [XmlElement("Timing")]
+        public SubpTiming Timing { get; set; }
     }
 }

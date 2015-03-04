@@ -49,9 +49,9 @@ namespace FfntTool
             using (FileStream glyphInputStream = new FileStream(path, FileMode.Open))
             using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(GlyphMap));
+                XmlSerializer serializer = new XmlSerializer(typeof (GlyphMap));
                 GlyphMap glyphMap = serializer.Deserialize(glyphInputStream) as GlyphMap;
-                
+
                 if (glyphMap != null)
                 {
                     byte[] ffntData = ReadFontLayers(Path.GetDirectoryName(path), fileName);
@@ -87,7 +87,7 @@ namespace FfntTool
                 {
                     for (int i = 0; i < result.Length; i++)
                     {
-                        result[i] = (byte) (result[i]  | layer[i]);
+                        result[i] = (byte) (result[i] | layer[i]);
                     }
                 }
                 return result;
@@ -105,7 +105,7 @@ namespace FfntTool
                 using (Image image = Image.FromFile(layerFilePath))
                 using (Bitmap bitmap = new Bitmap(image))
                 {
-                    byte[] result = new byte[bitmap.Width * bitmap.Height];
+                    byte[] result = new byte[bitmap.Width*bitmap.Height];
 
                     for (int y = 0; y < bitmap.Height; y++)
                     {
@@ -149,7 +149,7 @@ namespace FfntTool
 
         private static void SaveGlyphs(GlyphMap glyphMap, string fileName, string outputPath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(GlyphMap));
+            XmlSerializer serializer = new XmlSerializer(typeof (GlyphMap));
 
             string outputFilePath = Path.Combine(outputPath, fileName + ".xml");
             using (var outputStream = new FileStream(outputFilePath, FileMode.Create))
@@ -161,7 +161,7 @@ namespace FfntTool
         private static void SaveFontLayers(byte[] ffntData, string fileName, string outputPath)
         {
             const int maxLayers = 8;
-            int dimensions = (int)Math.Sqrt(ffntData.Length); // TODO: Fix dimensions for the arabic font (1024x512)
+            int dimensions = (int) Math.Sqrt(ffntData.Length); // TODO: Fix dimensions for the arabic font (1024x512)
 
             for (int i = 0; i < maxLayers; i++)
             {
@@ -182,7 +182,6 @@ namespace FfntTool
                         string outputFilePath = Path.Combine(outputPath, string.Format("{0}_{1}" + ".png", fileName, i));
                         bitmap.Save(outputFilePath, ImageFormat.Png);
                     }
-
                 }
             }
         }
@@ -200,7 +199,6 @@ namespace FfntTool
                     layer[i] = 0xFF;
                     emptyLayer = false;
                 }
-
             }
 
             return emptyLayer ? null : layer;

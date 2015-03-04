@@ -9,8 +9,7 @@ namespace FfntTool.Ffnt
         private const string Signature = "FXFT";
         private const short FfntHeaderSize = 10;
         private const short LittleEndianMagicNumber = 1;
-
-        private readonly List<FfntEntry> _entries; 
+        private readonly List<FfntEntry> _entries;
 
         public FfntFile()
         {
@@ -21,7 +20,6 @@ namespace FfntTool.Ffnt
         {
             get { return _entries; }
         }
-
 
         public static FfntFile ReadFfntFile(Stream inputStream)
         {
@@ -57,14 +55,14 @@ namespace FfntTool.Ffnt
             BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
             writer.Write(Encoding.Default.GetBytes(Signature));
             writer.Write(LittleEndianMagicNumber);
-            writer.Write((byte)Entries.Count);
+            writer.Write((byte) Entries.Count);
             writer.WriteZeros(1);
             writer.Write(FfntHeaderSize);
             writer.AlignWrite(16, 0x00);
 
             long entryHeaderPosition = outputStream.Position;
 
-            outputStream.Position += Entries.Count * FfntEntryHeader.FfntEntryHeaderSize;
+            outputStream.Position += Entries.Count*FfntEntryHeader.FfntEntryHeaderSize;
             writer.AlignWrite(16, 0x00);
 
             List<FfntEntryHeader> ffntEntryHeaders = new List<FfntEntryHeader>();
@@ -82,7 +80,6 @@ namespace FfntTool.Ffnt
             {
                 header.Write(outputStream);
             }
-            
         }
     }
 }

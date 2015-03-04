@@ -8,26 +8,25 @@ using SubpTool.Subp;
 
 namespace SubpTool
 {
-    static class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
             if (args.Any() || args.Length > 2)
             {
-                var encoding = GetEncodingFromArgument(args.Length== 2 ? args[0] : "");
+                var encoding = GetEncodingFromArgument(args.Length == 2 ? args[0] : "");
                 string path = args.Length == 2 ? args[1] : args[0];
-                
-                if(path.EndsWith(".subp"))
+
+                if (path.EndsWith(".subp"))
                 {
                     UnpackSubp(path, encoding);
                     return;
                 }
-				else if(path.EndsWith(".xml"))
-				{
-					PackSubp(path);
-					return;
-				}
-
+                if (path.EndsWith(".xml"))
+                {
+                    PackSubp(path);
+                    return;
+                }
             }
             Console.WriteLine("SubpTool by Atvaark\n" +
                               "Description\n" +
@@ -71,33 +70,33 @@ namespace SubpTool
                 NewLineHandling = NewLineHandling.Entitize,
                 Indent = true
             }))
-			{
-				SubpFile subpFile = SubpFile.ReadSubpFile(inputStream, encoding);
-				// TODO: Change XML Encoding
-				XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
+            {
+                SubpFile subpFile = SubpFile.ReadSubpFile(inputStream, encoding);
+                // TODO: Change XML Encoding
+                XmlSerializer serializer = new XmlSerializer(typeof (SubpFile));
                 serializer.Serialize(outputWriter, subpFile);
-			}
+            }
         }
 
         private static void PackSubp(string path)
-		{
+        {
             string fileDirectory = Path.GetDirectoryName(path);
             string fileName = Path.GetFileNameWithoutExtension(path);
             string outputFileName = fileName + ".subp";
             string outputFilePath = Path.Combine(fileDirectory, outputFileName);
-			
+
             using (FileStream inputStream = new FileStream(path, FileMode.Open))
             using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
-			{
-				XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
-				SubpFile subpFile = serializer.Deserialize(inputStream) as SubpFile;
-				// TODO: Get the encoding from the serializer? Or just save it as an attribute in the subpfile xml.
-				Encoding encoding = Encoding.Default;
-				if(subpFile != null)
-				{
-					subpFile.Write(outputStream, encoding);
-				}					
-			}			
-		}
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof (SubpFile));
+                SubpFile subpFile = serializer.Deserialize(inputStream) as SubpFile;
+                // TODO: Get the encoding from the serializer? Or just save it as an attribute in the subpfile xml.
+                Encoding encoding = Encoding.Default;
+                if (subpFile != null)
+                {
+                    subpFile.Write(outputStream, encoding);
+                }
+            }
+        }
     }
 }

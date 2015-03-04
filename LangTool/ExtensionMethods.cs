@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LangTool
 {
@@ -19,7 +15,6 @@ namespace LangTool
             }
             return builder.ToString();
         }
-
 
         internal static void WriteNullTerminatedString(this BinaryWriter writer, string text)
         {

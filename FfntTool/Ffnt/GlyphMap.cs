@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -18,7 +17,6 @@ namespace FfntTool.Ffnt
 
         [XmlArray("Glyphs")]
         public List<Glyph> Glyphs { get; set; }
-
 
         public static GlyphMap ReadGlyphMap(Stream inputStream)
         {
@@ -44,7 +42,7 @@ namespace FfntTool.Ffnt
         {
             BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
             writer.WriteZeros(6);
-            writer.Write((short)Glyphs.Count);
+            writer.Write((short) Glyphs.Count);
             writer.Write(Glyphs.Count*Glyph.GlyphSize);
             writer.WriteZeros(4);
             foreach (var glyph in Glyphs)
@@ -59,7 +57,7 @@ namespace FfntTool.Ffnt
             {
                 FfntEntrySignature = GlyphSignature,
                 Offset = (int) outputStream.Position,
-                Size = Glyphs.Count * Glyph.GlyphSize + 24
+                Size = Glyphs.Count*Glyph.GlyphSize + 24
             };
             return header;
         }

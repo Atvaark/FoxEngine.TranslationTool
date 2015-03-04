@@ -8,6 +8,7 @@ namespace SubpTool.Subp
     {
         [XmlAttribute("Start")]
         public ushort Start { get; set; }
+
         [XmlAttribute("End")]
         public ushort End { get; set; }
 

@@ -7,9 +7,9 @@ using LangTool.Lang;
 
 namespace LangTool
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 1)
             {
@@ -31,7 +31,7 @@ namespace LangTool
                 using (StreamReader xmlReader = new StreamReader(inputStream, Encoding.UTF8))
                 using (FileStream outputStream = new FileStream(path.Substring(0, path.Length - 4), FileMode.Create))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(LangFile));
+                    XmlSerializer serializer = new XmlSerializer(typeof (LangFile));
                     LangFile file = serializer.Deserialize(xmlReader) as LangFile;
                     if (file == null)
                     {
@@ -48,7 +48,7 @@ namespace LangTool
                 using (StreamWriter xmlWriter = new StreamWriter(outputStream, Encoding.UTF8))
                 {
                     LangFile file = LangFile.ReadLangFile(inputStream);
-                    XmlSerializer serializer = new XmlSerializer(typeof(LangFile));
+                    XmlSerializer serializer = new XmlSerializer(typeof (LangFile));
                     serializer.Serialize(xmlWriter, file);
                 }
             }

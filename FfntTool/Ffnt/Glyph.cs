@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -17,9 +16,9 @@ namespace FfntTool.Ffnt
             set { Character = value.Length == 1 ? value[0] : ' '; }
         }
 
-
         [XmlIgnore]
         public char Character { get; set; }
+
         public short XOffset { get; set; }
         public short YOffset { get; set; }
         public byte Width { get; set; }
@@ -28,9 +27,8 @@ namespace FfntTool.Ffnt
         public byte HorizontalSpace { get; set; }
         public byte HorizontalShift { get; set; }
         public byte VerticalShift { get; set; }
-
         // TODO: Add a layer property
-        
+
 
         public static Glyph ReadGlyph(Stream inputStream)
         {
@@ -42,7 +40,7 @@ namespace FfntTool.Ffnt
         public void Read(Stream inputStream)
         {
             BinaryReader reader = new BinaryReader(inputStream, Encoding.Default, true);
-            Character = (char)reader.ReadInt32(); 
+            Character = (char) reader.ReadInt32();
             XOffset = reader.ReadInt16();
             YOffset = reader.ReadInt16();
             Width = reader.ReadByte();
@@ -57,7 +55,7 @@ namespace FfntTool.Ffnt
         public void Write(Stream outputStream)
         {
             BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
-            writer.Write((int)Character);
+            writer.Write((int) Character);
             writer.Write(XOffset);
             writer.Write(YOffset);
             writer.Write(Width);
