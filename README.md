@@ -69,14 +69,14 @@ The language of the file must be specified to correctly decode certain subtitles
 Option | Language   | Encoding
 ------ | ---------- | --------
 -eng   | English    | ASCII
+-ara   | Arabic     | UTF-8
 -jpn   | Japanese   | UTF-8
+-por   | Portuguese | UTF-8
+-fre   | French     | ISO-8859-1
 -ger   | German     | ISO-8859-1
+-ita   | Italian    | ISO-8859-1
+-spa   | Spanish    | ISO-8859-1
 -rus   | Russian    | ISO-8859-5
--fre   | French     | ?
--ara   | Arabic     | ?
--spa   | Spanish    | ?
--ita   | Italian    | ?
--por   | Portuguese | ?
 
 ###Examples
 

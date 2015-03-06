@@ -35,22 +35,26 @@ namespace SubpTool
                               "  SubpTool.exe [options] filename.subp -Unpacks the subtitle pack file\n" +
                               "  SubpTool.exe [options] filename.xml -Packs the subtitle pack file \n" +
                               "Options:\n" +
-                              "  -jpn Use UTF8 encoding for japanese characters\n" +
-                              "  -rus Use ISO 8859-5 encoding for cyrillic characters\n" +
-                              "  -ger Use ISO-8859-1 encoding for german characters");
+                              "  -ara, -eng, -fre, -ger, -ita, -jpn, -por, -rus and -spa");
         }
 
         private static Encoding GetEncodingFromArgument(string encoding)
         {
-            // TODO: Check if the other encodings are actually ASCII.
             switch (encoding)
             {
+                case "-fre":
+                case "-ger":
+                case "-spa":
+                case "-ita":
+                    return Encoding.GetEncoding("ISO-8859-1");
                 case "-rus":
                     return Encoding.GetEncoding("ISO-8859-5");
                 case "-jpn":
+                case "-ara":
+                case "-por":
                     return Encoding.UTF8;
-                case "-ger":
-                    return Encoding.GetEncoding("ISO-8859-1");
+                case "-eng":
+                    return Encoding.ASCII;
                 default:
                     return Encoding.ASCII;
             }
