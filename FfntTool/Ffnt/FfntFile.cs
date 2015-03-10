@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace FfntTool.Ffnt
 {
+    [XmlType("FfntFile")]
     public class FfntFile
     {
         private const string Signature = "FXFT";
         private const short FfntHeaderSize = 10;
         private const short LittleEndianMagicNumber = 1;
-        private readonly List<FfntEntry> _entries;
 
         public FfntFile()
         {
-            _entries = new List<FfntEntry>();
+            Entries = new List<FfntEntry>();
         }
 
-        public List<FfntEntry> Entries
-        {
-            get { return _entries; }
-        }
+        [XmlArray("Entries")]
+        public List<FfntEntry> Entries { get; set; }
 
         public static FfntFile ReadFfntFile(Stream inputStream)
         {
@@ -46,7 +45,7 @@ namespace FfntTool.Ffnt
 
             foreach (var header in ffntEntryHeaders)
             {
-                _entries.Add(header.ReadData(inputStream));
+                Entries.Add(header.ReadData(inputStream));
             }
         }
 

@@ -9,7 +9,7 @@ namespace FfntTool.Ffnt
     {
         public const int GlyphSize = 20;
 
-        [XmlElement("Character")]
+        [XmlAttribute("Character")]
         public string CharacterString
         {
             get { return Character.ToString(); }
@@ -19,14 +19,36 @@ namespace FfntTool.Ffnt
         [XmlIgnore]
         public char Character { get; set; }
 
+        [XmlAttribute]
         public short XOffset { get; set; }
+
+        [XmlAttribute]
         public short YOffset { get; set; }
+
+        [XmlAttribute]
         public byte Width { get; set; }
+
+        [XmlAttribute]
         public byte Height { get; set; }
+
+        [XmlAttribute]
         public byte VerticalSpace { get; set; }
+
+        [XmlAttribute]
         public byte HorizontalSpace { get; set; }
+
+        [XmlAttribute]
         public byte HorizontalShift { get; set; }
+
+        [XmlAttribute]
         public byte VerticalShift { get; set; }
+
+        [XmlAttribute]
+        public short Unknown1 { get; set; }
+
+        [XmlAttribute]
+        public int Unknown2 { get; set; }
+
         // TODO: Add a layer property
 
 
@@ -49,7 +71,9 @@ namespace FfntTool.Ffnt
             HorizontalSpace = reader.ReadByte();
             HorizontalShift = reader.ReadByte();
             VerticalShift = reader.ReadByte();
-            reader.Skip(6);
+            Unknown1 = reader.ReadInt16();
+            Unknown2 = reader.ReadInt32();
+            // TODO: Check which unknown properties are constant zero
         }
 
         public void Write(Stream outputStream)
@@ -64,7 +88,8 @@ namespace FfntTool.Ffnt
             writer.Write(HorizontalSpace);
             writer.Write(HorizontalShift);
             writer.Write(VerticalShift);
-            writer.WriteZeros(6);
+            writer.Write(Unknown1);
+            writer.Write(Unknown2);
         }
     }
 }

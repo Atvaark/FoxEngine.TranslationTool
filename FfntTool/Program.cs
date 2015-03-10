@@ -46,20 +46,18 @@ namespace FfntTool
         {
             string outputFilePath = Path.Combine(outputPath, fileName + ".ffnt");
 
-            using (FileStream glyphInputStream = new FileStream(path, FileMode.Open))
+            using (FileStream fontInputStream = new FileStream(path, FileMode.Open))
             using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof (GlyphMap));
-                GlyphMap glyphMap = serializer.Deserialize(glyphInputStream) as GlyphMap;
+                XmlSerializer serializer = new XmlSerializer(typeof (FfntFile),
+                    new[] {typeof (GlyphMap), typeof (FontData)});
 
-                if (glyphMap != null)
+
+                FfntFile ffntFile = serializer.Deserialize(fontInputStream) as FfntFile;
+                if (ffntFile != null)
                 {
-                    byte[] ffntData = ReadFontLayers(Path.GetDirectoryName(path), fileName);
-                    FontData fontData = new FontData();
-                    fontData.Data = ffntData;
-                    FfntFile ffntFile = new FfntFile();
-                    ffntFile.Entries.Add(glyphMap);
-                    ffntFile.Entries.Add(fontData);
+                    ffntFile.Entries.OfType<FontData>().Single().Data = ReadFontLayers(Path.GetDirectoryName(path),
+                        fileName);
                     ffntFile.Write(outputStream);
                 }
             }
@@ -142,19 +140,19 @@ namespace FfntTool
                 if (glyphMap == null || fontData == null)
                     return;
 
-                SaveGlyphs(glyphMap, fileName, outputPath);
+                SaveFont(ffntFile, fileName, outputPath);
                 SaveFontLayers(fontData.Data, fileName, outputPath);
             }
         }
 
-        private static void SaveGlyphs(GlyphMap glyphMap, string fileName, string outputPath)
+        private static void SaveFont(FfntFile ffntFile, string fileName, string outputPath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof (GlyphMap));
+            XmlSerializer serializer = new XmlSerializer(typeof (FfntFile), new[] {typeof (GlyphMap), typeof (FontData)});
 
             string outputFilePath = Path.Combine(outputPath, fileName + ".xml");
             using (var outputStream = new FileStream(outputFilePath, FileMode.Create))
             {
-                serializer.Serialize(outputStream, glyphMap);
+                serializer.Serialize(outputStream, ffntFile);
             }
         }
 

@@ -18,6 +18,10 @@ namespace FfntTool.Ffnt
         [XmlArray("Glyphs")]
         public List<Glyph> Glyphs { get; set; }
 
+        public int Unknown1 { get; set; }
+        public short Unknown2 { get; set; }
+        public int Unknown3 { get; set; }
+
         public static GlyphMap ReadGlyphMap(Stream inputStream)
         {
             GlyphMap glyphMap = new GlyphMap();
@@ -28,10 +32,11 @@ namespace FfntTool.Ffnt
         public void Read(Stream inputStream)
         {
             BinaryReader reader = new BinaryReader(inputStream, Encoding.Default, true);
-            reader.Skip(6);
+            Unknown1 = reader.ReadInt32();
+            Unknown2 = reader.ReadInt16();
             short glyphCount = reader.ReadInt16();
             int size = reader.ReadInt32();
-            reader.Skip(4);
+            Unknown3 = reader.ReadInt32();
             for (int i = 0; i < glyphCount; i++)
             {
                 Glyphs.Add(Glyph.ReadGlyph(inputStream));
@@ -41,10 +46,11 @@ namespace FfntTool.Ffnt
         public override void Write(Stream outputStream)
         {
             BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true);
-            writer.WriteZeros(6);
+            writer.Write(Unknown1);
+            writer.Write(Unknown2);
             writer.Write((short) Glyphs.Count);
-            writer.Write(Glyphs.Count*Glyph.GlyphSize);
-            writer.WriteZeros(4);
+            writer.Write(GetAlignedSize(0));
+            writer.Write(Unknown3);
             foreach (var glyph in Glyphs)
             {
                 glyph.Write(outputStream);
@@ -57,9 +63,18 @@ namespace FfntTool.Ffnt
             {
                 FfntEntrySignature = GlyphSignature,
                 Offset = (int) outputStream.Position,
-                Size = Glyphs.Count*Glyph.GlyphSize + 24
+                Size = GetAlignedSize(16)
             };
             return header;
+        }
+
+        private int GetAlignedSize(int startSize)
+        {
+            int dataSize = Glyphs.Count*Glyph.GlyphSize + startSize;
+            int alignmentRequired = dataSize%16;
+            if (alignmentRequired > 0)
+                dataSize += 16 - alignmentRequired;
+            return dataSize;
         }
     }
 }
