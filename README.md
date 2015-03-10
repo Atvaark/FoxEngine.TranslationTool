@@ -15,6 +15,10 @@ SubpTool  | Subtitle unpacker/repacker
 Microsoft .NET Framework 4.5
 ```
 
+##Remarks
+Repacking might lead to crashes or endless loading times with the current version. This is due to not every value being saved in the xml file.
+
+
 ##FfntTool
 A Fox Engine bitmap font (.ffnt) unpacker and repacker.
 
