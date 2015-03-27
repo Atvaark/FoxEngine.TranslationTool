@@ -32,7 +32,7 @@ namespace FfntTool.Ffnt
         public byte Height { get; set; }
 
         [XmlAttribute]
-        public byte VerticalSpace { get; set; }
+        public byte Layer { get; set; }
 
         [XmlAttribute]
         public byte HorizontalSpace { get; set; }
@@ -67,7 +67,7 @@ namespace FfntTool.Ffnt
             YOffset = reader.ReadInt16();
             Width = reader.ReadByte();
             Height = reader.ReadByte();
-            VerticalSpace = reader.ReadByte();
+            Layer = reader.ReadByte();
             HorizontalSpace = reader.ReadByte();
             HorizontalShift = reader.ReadByte();
             VerticalShift = reader.ReadByte();
@@ -84,7 +84,7 @@ namespace FfntTool.Ffnt
             writer.Write(YOffset);
             writer.Write(Width);
             writer.Write(Height);
-            writer.Write(VerticalSpace);
+            writer.Write(Layer);
             writer.Write(HorizontalSpace);
             writer.Write(HorizontalShift);
             writer.Write(VerticalShift);
