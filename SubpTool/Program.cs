@@ -24,7 +24,7 @@ namespace SubpTool
                 }
                 if (path.EndsWith(".xml"))
                 {
-                    PackSubp(path);
+                    PackSubp(path, encoding);
                     return;
                 }
             }
@@ -82,7 +82,7 @@ namespace SubpTool
             }
         }
 
-        private static void PackSubp(string path)
+        private static void PackSubp(string path, Encoding encoding)
         {
             string fileDirectory = Path.GetDirectoryName(path);
             string fileName = Path.GetFileNameWithoutExtension(path);
@@ -94,8 +94,6 @@ namespace SubpTool
             {
                 XmlSerializer serializer = new XmlSerializer(typeof (SubpFile));
                 SubpFile subpFile = serializer.Deserialize(inputStream) as SubpFile;
-                // TODO: Get the encoding from the serializer? Or just save it as an attribute in the subpfile xml.
-                Encoding encoding = Encoding.Default;
                 if (subpFile != null)
                 {
                     subpFile.Write(outputStream, encoding);
