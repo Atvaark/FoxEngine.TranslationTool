@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace LangTool
@@ -20,6 +21,16 @@ namespace LangTool
         {
             byte[] data = Encoding.UTF8.GetBytes(text + '\0');
             writer.Write(data, 0, data.Length);
+        }
+
+        internal static void AlignWrite(this BinaryWriter writer, int alignment, byte data)
+        {
+            long alignmentRequired = writer.BaseStream.Position % alignment;
+            if (alignmentRequired > 0)
+            {
+                byte[] alignmentBytes = Enumerable.Repeat(data, (int)(alignment - alignmentRequired)).ToArray();
+                writer.Write(alignmentBytes, 0, alignmentBytes.Length);
+            }
         }
     }
 }

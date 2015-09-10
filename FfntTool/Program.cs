@@ -112,7 +112,7 @@ namespace FfntTool
                             var pixel = bitmap.GetPixel(x, y);
                             if (pixel.R == 255 && pixel.G == 255 && pixel.B == 255)
                             {
-                                result[y*bitmap.Height + x] = layerMask;
+                                result[y*bitmap.Width + x] = layerMask;
                             }
                         }
                     }
@@ -141,8 +141,31 @@ namespace FfntTool
                     return;
 
                 SaveFont(ffntFile, fileName, outputPath);
-                SaveFontLayers(fontData.Data, fileName, outputPath);
+                Size size = CalculateSize(fontData.Data.Length);
+                SaveFontLayers(fontData.Data, size, fileName, outputPath);
             }
+        }
+
+        private static Size CalculateSize(int area)
+        {
+            int height;
+            int width;
+            if (Math.Sqrt(area)%1 == 0) // Squared (e.g. the latin font)
+            {
+                height = width = (int) Math.Sqrt(area);
+            }
+            else if (area/2%2 == 0 && Math.Sqrt(area/2)%1 == 0) // Rectangle with width = 2*height (e.g. the kanji font)
+            {
+                height = (int) Math.Sqrt(area/2);
+                width = 2*height;
+            }
+            else
+            {
+                // TODO: Add width and height options to specify custom dimensions.
+                throw new Exception("Unknown bitmap font dimensions.");
+            }
+
+            return new Size(width, height);
         }
 
         private static void SaveFont(FfntFile ffntFile, string fileName, string outputPath)
@@ -156,17 +179,15 @@ namespace FfntTool
             }
         }
 
-        private static void SaveFontLayers(byte[] ffntData, string fileName, string outputPath)
+        private static void SaveFontLayers(byte[] ffntData, Size size, string fileName, string outputPath)
         {
             const int maxLayers = 8;
-            int dimensions = (int) Math.Sqrt(ffntData.Length); // TODO: Fix dimensions for the arabic font (1024x512)
-
             for (int i = 0; i < maxLayers; i++)
             {
                 byte[] layer = GetLayer(ffntData, i);
                 if (layer != null)
                 {
-                    using (Bitmap bitmap = new Bitmap(dimensions, dimensions, PixelFormat.Format8bppIndexed))
+                    using (Bitmap bitmap = new Bitmap(size.Width, size.Height, PixelFormat.Format8bppIndexed))
                     {
                         BitmapData bitmapData = bitmap.LockBits(
                             new Rectangle(0, 0, bitmap.Width, bitmap.Height),

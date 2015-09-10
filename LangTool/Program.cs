@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using LangTool.Lang;
 
@@ -25,7 +24,7 @@ namespace LangTool
                 return;
             }
             string extension = Path.GetExtension(path);
-            if (extension == ".xml")
+            if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
             {
                 using (FileStream inputStream = new FileStream(path, FileMode.Open))
                 using (StreamReader xmlReader = new StreamReader(inputStream, Encoding.UTF8))
@@ -41,7 +40,7 @@ namespace LangTool
                     file.Write(outputStream);
                 }
             }
-            else if (Regex.Match(extension, @"^\.lng#\w{3}$", RegexOptions.IgnoreCase).Success)
+            else if (string.Equals(extension, ".lng", StringComparison.OrdinalIgnoreCase))
             {
                 using (FileStream inputStream = new FileStream(path, FileMode.Open))
                 using (FileStream outputStream = new FileStream(path + ".xml", FileMode.Create))
@@ -65,8 +64,8 @@ namespace LangTool
                               "Usage:\n" +
                               "  LangTool file_path.lng|file_path.xml\n" +
                               "Examples:\n" +
-                              "  LangTool gz_cassette.lng#eng     - Converts the lng file to xml\n" +
-                              "  LangTool gz_cassette.lng#eng.xml - Converts the xml file to lng");
+                              "  LangTool gz_cassette.eng.lng     - Converts the lng file to xml\n" +
+                              "  LangTool gz_cassette.eng.lng.xml - Converts the xml file to lng");
         }
     }
 }

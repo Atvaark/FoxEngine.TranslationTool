@@ -6,15 +6,12 @@ namespace LangTool.Lang
     public class LangEntry
     {
         [XmlAttribute]
-        public string Key { get; set; }
+        public uint Key { get; set; }
 
         [XmlIgnore]
-        public int KeyOffset { get; set; }
+        public int Offset { get; set; }
 
         [XmlAttribute]
         public string Value { get; set; }
-
-        [XmlIgnore]
-        public int ValueOffset { get; set; }
     }
 }
