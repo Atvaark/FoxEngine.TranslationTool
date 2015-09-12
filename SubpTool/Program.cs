@@ -42,21 +42,19 @@ namespace SubpTool
         {
             switch (encoding)
             {
-                case "-fre":
-                case "-ger":
-                case "-spa":
-                case "-ita":
-                    return Encoding.GetEncoding("ISO-8859-1");
                 case "-rus":
                     return Encoding.GetEncoding("ISO-8859-5");
                 case "-jpn":
                 case "-ara":
                 case "-por":
                     return Encoding.UTF8;
+                case "-fre":
+                case "-ger":
+                case "-spa":
+                case "-ita":
                 case "-eng":
-                    return Encoding.ASCII;
                 default:
-                    return Encoding.ASCII;
+                    return Encoding.GetEncoding("ISO-8859-1");
             }
         }
 

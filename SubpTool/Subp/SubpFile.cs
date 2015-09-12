@@ -8,7 +8,7 @@ namespace SubpTool.Subp
     [XmlType("SubpFile")]
     public class SubpFile
     {
-        private const short MagicNumber = 0x4C01;
+        private const short MagicNumber = 0x0113;
 
         public SubpFile()
         {

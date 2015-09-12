@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,15 @@ namespace SubpTool.Subp
         [XmlAttribute("Priority")]
         public byte SubtitlePriority { get; set; }
 
+        [XmlAttribute("Flags")]
+        public short Flags { get; set; }
+
+        [XmlAttribute("Unknown")]
+        public short Unknown { get; set; }
+
+        [XmlAttribute("AdditionalLength")]
+        public short AdditionalLength { get; set; }
+        
         [XmlArray("Lines")]
         public List<SubpLine> Lines { get; set; }
 
@@ -42,9 +53,10 @@ namespace SubpTool.Subp
             short stringLength1 = reader.ReadInt16();
             short stringLength2 = reader.ReadInt16();
             // TODO: Analyze what these values are used for
-            short unknown3 = reader.ReadInt16();
-            short flags = reader.ReadInt16();
-
+            AdditionalLength = Convert.ToInt16(stringLength2 - stringLength1);
+            Unknown = reader.ReadInt16();
+            Flags = reader.ReadInt16();
+            
             SubpTiming[] timings = new SubpTiming[lineCount];
             for (int i = 0; i < lineCount; i++)
             {
@@ -53,9 +65,8 @@ namespace SubpTool.Subp
 
             byte[] data = reader.ReadBytes(stringLength1);
             string subtitles = encoding.GetString(data).TrimEnd('\0');
-
-
-            // TODO: Check if $ can be escaped somehow
+            
+            // TODO: Check if the '$' literal can be escaped somehow
             // TODO: Check if Split('$').Count == lineCount
             string[] lines = subtitles.Split('$');
             for (int i = 0; i < lineCount; i++)
@@ -63,7 +74,7 @@ namespace SubpTool.Subp
                 Lines.Add(new SubpLine(lines.Length > i ? lines[i] : "", timings[i]));
             }
         }
-
+        
         public SubpIndex GetIndex(Stream outputStream)
         {
             return new SubpIndex
@@ -88,10 +99,10 @@ namespace SubpTool.Subp
             string subtitles = GetJoinedSubtitleLines() + '\0';
             byte[] encodedData = encoding.GetBytes(subtitles);
 
-            writer.Write((short) encodedData.Length);
-            writer.Write((short) encodedData.Length);
-            writer.Write((short) 0);
-            writer.Write((short) 0);
+            writer.Write(Convert.ToInt16(encodedData.Length));
+            writer.Write(Convert.ToInt16(encodedData.Length + AdditionalLength));
+            writer.Write(Unknown);
+            writer.Write(Flags);
 
             foreach (var line in Lines)
             {
