@@ -68,19 +68,19 @@ SubpTool [options] file_path [output_path]
 ```
 
 ###Options
-The language of the file must be specified to correctly decode certain subtitles. Not specifying a language option will default to the ASCII encoding.
+The language of the file may be specified to correctly decode certain subtitles. Not specifying a language option will default to the ISO-8859-1 (Latin 1) encoding.
 
 Option | Language   | Encoding
 ------ | ---------- | --------
--eng   | English    | ASCII
--ara   | Arabic     | UTF-8
--jpn   | Japanese   | UTF-8
--por   | Portuguese | UTF-8
+-eng   | English    | ISO-8859-1
 -fre   | French     | ISO-8859-1
 -ger   | German     | ISO-8859-1
 -ita   | Italian    | ISO-8859-1
 -spa   | Spanish    | ISO-8859-1
 -rus   | Russian    | ISO-8859-5
+-ara   | Arabic     | UTF-8
+-jpn   | Japanese   | UTF-8
+-por   | Portuguese | UTF-8
 
 ###Examples
 
