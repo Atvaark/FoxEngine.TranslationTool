@@ -46,6 +46,10 @@
     <Compile Include="Lang\LangFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\BigEndianBinaryReader.cs" />
+    <Compile Include="Utility\BigEndianBinaryWriter.cs" />
+    <Compile Include="Utility\EndianessBitConverter.cs" />
+    <Compile Include="Utility\Endianess.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

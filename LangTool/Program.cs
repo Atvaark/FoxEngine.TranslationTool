@@ -40,7 +40,8 @@ namespace LangTool
                     file.Write(outputStream);
                 }
             }
-            else if (string.Equals(extension, ".lng", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(extension, ".lng", StringComparison.OrdinalIgnoreCase)
+                     || string.Equals(extension, ".lng2", StringComparison.OrdinalIgnoreCase))
             {
                 using (FileStream inputStream = new FileStream(path, FileMode.Open))
                 using (FileStream outputStream = new FileStream(path + ".xml", FileMode.Create))
