@@ -12,6 +12,9 @@ namespace LangTool.Lang
         public int Offset { get; set; }
 
         [XmlAttribute]
+        public short Color { get; set; }
+
+        [XmlAttribute]
         public string Value { get; set; }
     }
 }

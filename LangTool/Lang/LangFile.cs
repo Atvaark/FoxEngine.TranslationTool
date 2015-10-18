@@ -65,11 +65,11 @@ namespace LangTool.Lang
             for (int i = 0; i < entryCount; i++)
             {
                 int valuePosition = (int)inputStream.Position - valuesOffset;
-                short valueConstant = headerReader.ReadInt16();
-                Debug.Assert(valueConstant == 1);
+                short colorId = headerReader.ReadInt16();
                 string value = reader.ReadNullTerminatedString();
                 offsetEntryDictionary.Add(valuePosition, new LangEntry
                 {
+                    Color = colorId,
                     Value = value
                 });
             }
@@ -109,7 +109,7 @@ namespace LangTool.Lang
             foreach (var entry in Entries)
             {
                 entry.Offset = (int)outputStream.Position - valuesPosition;
-                headerWriter.Write((short)0x0001);
+                headerWriter.Write(entry.Color);
                 writer.WriteNullTerminatedString(entry.Value);
             }
 

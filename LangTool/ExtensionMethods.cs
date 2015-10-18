@@ -26,11 +26,8 @@ namespace LangTool
         internal static void AlignWrite(this BinaryWriter writer, int alignment, byte data)
         {
             long alignmentRequired = writer.BaseStream.Position % alignment;
-            if (alignmentRequired > 0)
-            {
-                byte[] alignmentBytes = Enumerable.Repeat(data, (int)(alignment - alignmentRequired)).ToArray();
-                writer.Write(alignmentBytes, 0, alignmentBytes.Length);
-            }
+            byte[] alignmentBytes = Enumerable.Repeat(data, (int)(alignment - alignmentRequired)).ToArray();
+            writer.Write(alignmentBytes, 0, alignmentBytes.Length);
         }
     }
 }
