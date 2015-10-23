@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using LangTool.Utility;
 
 namespace LangTool.Lang
 {
@@ -8,6 +9,9 @@ namespace LangTool.Lang
         [XmlAttribute]
         public uint Key { get; set; }
 
+        [XmlAttribute]
+        public string LangId { get; set; }
+
         [XmlIgnore]
         public int Offset { get; set; }
 
@@ -16,5 +20,18 @@ namespace LangTool.Lang
 
         [XmlAttribute]
         public string Value { get; set; }
+
+        public bool ShouldSerializeKey()
+        {
+            return string.IsNullOrEmpty(LangId);
+        }
+
+        public void UpdateKey()
+        {
+            if (!string.IsNullOrEmpty(LangId))
+            {
+                Key = Fox.GetStrCode32(LangId);
+            }
+        }
     }
 }

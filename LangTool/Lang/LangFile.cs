@@ -26,14 +26,14 @@ namespace LangTool.Lang
         [XmlAttribute("Endianess")]
         public Endianess Endianess { get; set; }
 
-        public static LangFile ReadLangFile(Stream inputStream)
+        public static LangFile ReadLangFile(Stream inputStream, Dictionary<uint, string> dictionary)
         {
             LangFile langFile = new LangFile();
-            langFile.Read(inputStream);
+            langFile.Read(inputStream, dictionary);
             return langFile;
         }
 
-        public void Read(Stream inputStream)
+        public void Read(Stream inputStream, Dictionary<uint, string> langIdDictionary)
         {
             BinaryReader headerReader = new BinaryReader(inputStream, Encoding.UTF8, true);
             BinaryReader reader;
@@ -77,10 +77,16 @@ namespace LangTool.Lang
             inputStream.Position = keysOffset;
             for (int i = 0; i < entryCount; i++)
             {
-                uint key = reader.ReadUInt32();
+                uint langIdCode = reader.ReadUInt32();
                 int offset = reader.ReadInt32();
+                
+                string langId;
+                if (langIdDictionary.TryGetValue(langIdCode, out langId))
+                {
+                    offsetEntryDictionary[offset].LangId = langId;
+                }
 
-                offsetEntryDictionary[offset].Key = key;
+                offsetEntryDictionary[offset].Key = langIdCode;
             }
 
             Entries = offsetEntryDictionary.Values.ToList();
@@ -108,6 +114,7 @@ namespace LangTool.Lang
             int valuesPosition = (int)outputStream.Position;
             foreach (var entry in Entries)
             {
+                entry.UpdateKey();
                 entry.Offset = (int)outputStream.Position - valuesPosition;
                 headerWriter.Write(entry.Color);
                 writer.WriteNullTerminatedString(entry.Value);
