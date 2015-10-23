@@ -41,7 +41,7 @@ namespace FfntTool.Ffnt
         public byte HorizontalShift { get; set; }
 
         [XmlAttribute]
-        public byte VerticalShift { get; set; }
+        public sbyte VerticalShift { get; set; }
 
         [XmlAttribute]
         public short Unknown1 { get; set; }
@@ -70,7 +70,7 @@ namespace FfntTool.Ffnt
             Layer = reader.ReadByte();
             HorizontalSpace = reader.ReadByte();
             HorizontalShift = reader.ReadByte();
-            VerticalShift = reader.ReadByte();
+            VerticalShift = reader.ReadSByte();
             Unknown1 = reader.ReadInt16();
             Unknown2 = reader.ReadInt32();
             // TODO: Check which unknown properties are constant zero
