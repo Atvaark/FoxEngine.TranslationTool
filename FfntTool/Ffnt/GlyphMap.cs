@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -51,7 +52,7 @@ namespace FfntTool.Ffnt
             writer.Write((short) Glyphs.Count);
             writer.Write(GetAlignedSize(0));
             writer.Write(Unknown3);
-            foreach (var glyph in Glyphs)
+            foreach (var glyph in Glyphs.OrderBy(g => g.Character))
             {
                 glyph.Write(outputStream);
             }
