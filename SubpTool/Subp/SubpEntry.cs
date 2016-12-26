@@ -106,8 +106,10 @@ namespace SubpTool.Subp
 
             foreach (var line in Lines)
             {
-                line.Timing.Write(outputStream);
+                SubpTiming timing = line.Timing ?? SubpTiming.Null;
+                timing.Write(outputStream);
             }
+
             writer.Write(encodedData);
         }
     }

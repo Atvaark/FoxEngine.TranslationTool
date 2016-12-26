@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using SubpTool.Subp;
 
@@ -75,7 +76,7 @@ namespace SubpTool
             {
                 SubpFile subpFile = SubpFile.ReadSubpFile(inputStream, encoding);
                 // TODO: Change XML Encoding
-                XmlSerializer serializer = new XmlSerializer(typeof (SubpFile));
+                XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
                 serializer.Serialize(outputWriter, subpFile);
             }
         }
@@ -88,14 +89,43 @@ namespace SubpTool
             string outputFilePath = Path.Combine(fileDirectory, outputFileName);
 
             using (FileStream inputStream = new FileStream(path, FileMode.Open))
+            using (XmlReader xmlReader = XmlReader.Create(inputStream, CreateXmlReaderSettings<SubpFile>()))
             using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof (SubpFile));
-                SubpFile subpFile = serializer.Deserialize(inputStream) as SubpFile;
-                if (subpFile != null)
-                {
-                    subpFile.Write(outputStream, encoding);
-                }
+                XmlSerializer serializer = new XmlSerializer(typeof(SubpFile));
+                SubpFile subpFile = serializer.Deserialize(xmlReader) as SubpFile;
+                subpFile?.Write(outputStream, encoding);
+            }
+        }
+
+        private static XmlReaderSettings CreateXmlReaderSettings<T>()
+        {
+            XmlSchemas schemas = new XmlSchemas();
+            XmlSchemaExporter exporter = new XmlSchemaExporter(schemas);
+            XmlTypeMapping mapping = new XmlReflectionImporter().ImportTypeMapping(typeof(T));
+            exporter.ExportTypeMapping(mapping);
+            XmlSchemaSet schemaSet = new XmlSchemaSet();
+            foreach (XmlSchema schema in schemas)
+            {
+                schemaSet.Add(schema);
+            }
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.Schemas = schemaSet;
+            settings.ValidationType = ValidationType.Schema;
+            settings.ValidationEventHandler += HandleXmlReaderValidation;
+            return settings;
+        }
+
+        private static void HandleXmlReaderValidation(object sender, ValidationEventArgs args)
+        {
+            if (args.Severity == XmlSeverityType.Warning)
+            {
+                Console.WriteLine($"{args.Severity} at line '{args.Exception?.LineNumber}' position '{args.Exception?.LinePosition}':\n{args.Message}");
+            }
+            else
+            {
+                throw args.Exception;
             }
         }
     }

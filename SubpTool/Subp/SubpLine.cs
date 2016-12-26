@@ -18,7 +18,7 @@ namespace SubpTool.Subp
         [XmlAttribute("Text")]
         public string Text { get; set; }
 
-        [XmlElement("Timing")]
+        [XmlElement("Timing", IsNullable = true)]
         public SubpTiming Timing { get; set; }
     }
 }

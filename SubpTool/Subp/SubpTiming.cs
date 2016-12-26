@@ -6,6 +6,8 @@ namespace SubpTool.Subp
 {
     public class SubpTiming
     {
+        public static SubpTiming Null = new SubpTiming();
+
         [XmlAttribute("Start")]
         public ushort Start { get; set; }
 
