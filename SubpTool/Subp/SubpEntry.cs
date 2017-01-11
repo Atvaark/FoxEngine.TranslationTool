@@ -27,8 +27,8 @@ namespace SubpTool.Subp
         [XmlAttribute("Flags")]
         public short Flags { get; set; }
 
-        [XmlAttribute("Unknown")]
-        public short Unknown { get; set; }
+        [XmlAttribute("CharacterId")]
+        public short CharacterId { get; set; }
 
         [XmlAttribute("AdditionalLength")]
         public short AdditionalLength { get; set; }
@@ -54,7 +54,7 @@ namespace SubpTool.Subp
             short stringLength2 = reader.ReadInt16();
             // TODO: Analyze what these values are used for
             AdditionalLength = Convert.ToInt16(stringLength2 - stringLength1);
-            Unknown = reader.ReadInt16();
+            CharacterId = reader.ReadInt16();
             Flags = reader.ReadInt16();
             
             SubpTiming[] timings = new SubpTiming[lineCount];
@@ -101,7 +101,7 @@ namespace SubpTool.Subp
 
             writer.Write(Convert.ToInt16(encodedData.Length));
             writer.Write(Convert.ToInt16(encodedData.Length + AdditionalLength));
-            writer.Write(Unknown);
+            writer.Write(CharacterId);
             writer.Write(Flags);
 
             foreach (var line in Lines)
