@@ -1,4 +1,4 @@
-#FoxEngine.TranslationTool
+# FoxEngine.TranslationTool
 A bundle of tools related to text editing Fox Engine / MGSV Ground Zeroes files.
 
 This bundle contains the following tools:
@@ -10,24 +10,24 @@ LangTool  | String table unpacker/repacker
 SubpTool  | Subtitle unpacker/repacker
 
 
-##Requirements
+## Requirements
 ```
 Microsoft .NET Framework 4.5
 ```
 
-##Remarks
+## Remarks
 Repacking might lead to crashes or endless loading times with the current version. This is due to not every value being saved in the xml file.
 
 
-##FfntTool
+## FfntTool
 A Fox Engine bitmap font (.ffnt) unpacker and repacker.
 
-###Usage
+### Usage
 ```
 FfntTool file_path [output_path]
 ```
 
-###Examples
+### Examples
 
 Unpacking a font file. This will create the file called *KanjiFont.ffnt.xml* and a folder called *KanjiFont*. The font bitmaps will be exported as png files to the *KanjiFont* folder. Each layer of the bitmap font is exported as a single black and white png image.
 ```
@@ -39,15 +39,15 @@ Repacking a font file. This will create the file called *KanjiFont.ffnt*. The bi
 FfntTool KanjiFont.ffnt.xml
 ```
 
-##LangTool
+## LangTool
 A Fox Engine localizable string table (.lng) unpacker and repacker.
 
-###Usage
+### Usage
 ```
 LangTool file_path [output_path]
 ```
 
-###Examples
+### Examples
 
 Unpacking an .lng file. This will create the file *gz_menu.lng#eng.xml*.
 ```
@@ -59,15 +59,15 @@ Repacking an .lng file. This will create the file *gz_menu.lng#eng*
 LangTool gz_menu.lng#eng.xml
 ```
 
-##SubpTool
+## SubpTool
 A Fox Engine subtitle pack unpacker and repacker.
 
-###Usage
+### Usage
 ```
 SubpTool [options] file_path [output_path]
 ```
 
-###Options
+### Options
 The language of the file may be specified to correctly decode certain subtitles. Not specifying a language option will default to the ISO-8859-1 (Latin 1) encoding.
 
 Option | Language   | Encoding
@@ -82,7 +82,7 @@ Option | Language   | Encoding
 -jpn   | Japanese   | UTF-8
 -por   | Portuguese | UTF-8
 
-###Examples
+### Examples
 
 Unpacking a subtitle package.
 ```
