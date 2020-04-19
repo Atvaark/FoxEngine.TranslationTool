@@ -47,7 +47,7 @@ namespace SubpTool.Subp
         {
             BinaryReader reader = new BinaryReader(input, encoding, true);
             short magicNumber = reader.ReadInt16();
-            byte lineCount = reader.ReadByte();
+            byte timingCount = reader.ReadByte();
             SubtitlePriority = reader.ReadByte();
             // TODO: Check if this is string length and (encoded) byte count.
             short stringLength1 = reader.ReadInt16();
@@ -57,8 +57,8 @@ namespace SubpTool.Subp
             CharacterId = reader.ReadInt16();
             Flags = reader.ReadInt16();
             
-            SubpTiming[] timings = new SubpTiming[lineCount];
-            for (int i = 0; i < lineCount; i++)
+            SubpTiming[] timings = new SubpTiming[timingCount];
+            for (int i = 0; i < timingCount; i++)
             {
                 timings[i] = SubpTiming.ReadSubpTiming(input);
             }
@@ -69,9 +69,18 @@ namespace SubpTool.Subp
             // TODO: Check if the '$' literal can be escaped somehow
             // TODO: Check if Split('$').Count == lineCount
             string[] lines = subtitles.Split('$');
-            for (int i = 0; i < lineCount; i++)
+            for (int i = 0; i < timingCount; i++)
             {
                 Lines.Add(new SubpLine(lines.Length > i ? lines[i] : "", timings[i]));
+            }
+
+            if (lines.Length > timingCount)
+            {
+                // More lines than timings => Append without timing
+                for (int i = timingCount; i < lines.Length; i++)
+                {
+                    Lines.Add(new SubpLine(lines[i], null));
+                }
             }
         }
         
@@ -93,7 +102,8 @@ namespace SubpTool.Subp
         {
             BinaryWriter writer = new BinaryWriter(outputStream, encoding, true);
             writer.Write(MagicNumber);
-            writer.Write((byte) Lines.Count);
+            SubpTiming[] timings = Lines.Select(line => line.Timing).Where(timing => timing != null).ToArray();
+            writer.Write((byte)timings.Length);
             writer.Write(SubtitlePriority);
 
             string subtitles = GetJoinedSubtitleLines() + '\0';
@@ -104,9 +114,8 @@ namespace SubpTool.Subp
             writer.Write(CharacterId);
             writer.Write(Flags);
 
-            foreach (var line in Lines)
+            foreach (var timing in timings)
             {
-                SubpTiming timing = line.Timing ?? SubpTiming.Null;
                 timing.Write(outputStream);
             }
 

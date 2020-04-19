@@ -20,5 +20,10 @@ namespace SubpTool.Subp
 
         [XmlElement("Timing", IsNullable = true)]
         public SubpTiming Timing { get; set; }
+
+        public bool ShouldSerializeTiming()
+        {
+            return Timing != null;
+        }
     }
 }
